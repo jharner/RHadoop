@@ -1,0 +1,29 @@
+version: '3'
+services:
+
+  hadoop:
+    build: ./hadoop
+    restart: always
+    image: rhadoop-hadoop
+    ports:
+      - "9000:9000"     # Hadoop
+      - "50070:50070"   # Hadoop UI
+    volumes:
+      - rhadoop_hadoopdata:/opt/hadoop
+
+  hive:
+    build: ./hive
+    restart: always
+    image: rhadoop-hive
+    ports:
+      - "10000:10000"
+    volumes:
+      - rhadoop_hivedata:/opt/hive
+    depends_on:
+      - hadoop
+
+volumes:
+  rhadoop_hadoopdata:
+  rhadoop_hivedata:
+
+  
