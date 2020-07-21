@@ -5,25 +5,38 @@ services:
     build: ./hadoop
     restart: always
     image: rhadoop-hadoop
+    container_name: rhadoop
+    hostname: rhadoop
     ports:
       - "9000:9000"     # Hadoop
       - "50070:50070"   # Hadoop UI
+      - "50075:50075"
+      - "8088:8088"
+    networks:
+      rconnect-network:
+      rspark-network:
     volumes:
-      - rhadoop_hadoopdata:/opt/hadoop
+      - hadoopdata:/opt/hadoop
 
   hive:
     build: ./hive
     restart: always
     image: rhadoop-hive
+    container_name: rhive
+    hostname: rhive
     ports:
       - "10000:10000"
-    volumes:
-      - rhadoop_hivedata:/opt/hive
+      - "9999:9999"  ##Hive UI
+      - "9083:9083"  ## Hive Metastore
+    networks:
+      rconnect-network:
+      rspark-network:
     depends_on:
       - hadoop
 
 volumes:
-  rhadoop_hadoopdata:
-  rhadoop_hivedata:
+  hadoopdata:
 
-  
+networks:
+  rconnect-network:
+  rspark-network:
