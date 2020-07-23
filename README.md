@@ -13,6 +13,7 @@ r-user@computer:~$ bash ./start.sh build
 ```shell script
 bash ./start.sh build
 ```
+[rconnect](http://localhost:8787)
 
 Note, if there are already Docker containers for other `rcompute` modules, all additional modules, 
 including `rhadoop` will share a common network in Docker called `rconnect`.  If this network does 
