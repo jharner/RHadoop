@@ -10,9 +10,11 @@ To build `rhadoop` using `docker-compose`, run the following in the base build d
 ```console
 r-user@computer:~$ bash ./start.sh build 
 ```
+<!--
 ```shell script
 bash ./start.sh build
 ```
+-->
 [rconnect](http://localhost:8787)
 
 Note, if there are already Docker containers for other `rcompute` modules, all additional modules, 
