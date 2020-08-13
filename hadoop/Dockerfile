@@ -3,6 +3,7 @@ FROM ubuntu:bionic
 ARG hadoopversion=2.9.2
 ARG javaversion=8
 ARG javaversion_number=1.${javaversion}.0
+ARG pgversion=9.6
 
 COPY postgresKey.asc openjdkKey.asc /tmp/
 RUN apt-get update && \
