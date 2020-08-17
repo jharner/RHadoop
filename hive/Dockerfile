@@ -20,10 +20,10 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-#RUN apt-get update && \
-#	apt-get install -y apt-utils wget openjdk-${javaversion}-jdk libpostgresql-jdbc-java postgresql-client && \
-#	update-java-alternatives -s /usr/lib/jvm/java-${javaversion_number}-openjdk-amd64 && \
-#	apt-get clean
+# RUN apt-get update && \
+#	  apt-get install -y apt-utils wget openjdk-${javaversion}-jdk libpostgresql-jdbc-java postgresql-client && \
+#	  update-java-alternatives -s /usr/lib/jvm/java-${javaversion_number}-openjdk-amd64 && \
+#	  apt-get clean
 
 RUN cd /opt && wget --quiet http://archive.apache.org/dist/hadoop/common/hadoop-${hadoopversion}/hadoop-${hadoopversion}.tar.gz && \
 	tar zxf hadoop-${hadoopversion}.tar.gz && \
