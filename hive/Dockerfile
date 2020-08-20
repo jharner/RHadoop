@@ -2,7 +2,7 @@ FROM library/ubuntu:bionic
 MAINTAINER Mark Lilback <mark@lilback.com>
 
 ARG hadoopversion=2.9.2
-ARG hiveversion=2.1.1
+ARG hiveversion=2.3.7
 ARG javaversion=8
 ARG javaversion_number=1.${javaversion}.0
 ARG pgversion=9.6
@@ -28,7 +28,8 @@ RUN apt-get update && \
 RUN cd /opt && wget --quiet http://archive.apache.org/dist/hadoop/common/hadoop-${hadoopversion}/hadoop-${hadoopversion}.tar.gz && \
 	tar zxf hadoop-${hadoopversion}.tar.gz && \
 	ln -s hadoop-${hadoopversion} hadoop && \
-	rm hadoop-${hadoopversion}.tar.gz
+	rm hadoop-${hadoopversion}.tar.gz && \
+	mkdir -p /opt/hadoop-data; chown -R root:root /opt/hadoop-data; chmod 700 /opt/hadoop-data
 
 RUN cd /opt && \
 	wget --quiet http://archive.apache.org/dist/hive/hive-${hiveversion}/apache-hive-${hiveversion}-bin.tar.gz && \
@@ -36,7 +37,11 @@ RUN cd /opt && \
 	ln -s apache-hive-${hiveversion}-bin hive && \
 	ln -s /usr/share/java/postgresql-jdbc4.jar /opt/hive/lib/postgresql-jdbc4.jar && \
 	ln -s /opt/hive/jdbc/hive-jdbc-${hiveversion}-standalone.jar /opt/hive/lib/ && \
-	rm apache-hive-${hiveversion}-bin.tar.gz
+	rm apache-hive-${hiveversion}-bin.tar.gz && \
+	mkdir /opt/hive-data && \
+    mkdir /scripts && \
+    chown -R root:root /opt/hive-data && \
+    chmod 700 /opt/hive-data
 
 ADD core-site.xml log4j.properties /opt/hadoop/etc/hadoop/
 ADD startup.sh /
@@ -45,7 +50,6 @@ ADD hive-site.xml /opt/hive/conf/
 
 RUN useradd -u 1000 -s /bin/bash -m -d /home/rstudio rstudio
 
-RUN mkdir /scripts
 COPY waitfor.sh /scripts/
 RUN chmod 777 /scripts/waitfor.sh
 
