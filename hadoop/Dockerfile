@@ -34,6 +34,7 @@ ADD core-site.xml hdfs-site.xml /usr/local/hadoop/etc/hadoop/
 ADD log4j.properties /usr/local/hadoop/etc/hadoop/
 
 RUN mkdir -p /scripts /opt/hadoop
+RUN mkdir -p /opt/hadoop-data; chown -R root:root /opt/hadoop-data; chmod 700 /opt/hadoop-data
 ADD waitfor.sh /scripts/
 RUN chmod 777 /scripts/waitfor.sh
 RUN echo "StrictHostKeyChecking no\nPasswordAuthentication yes\n" >> /etc/ssh/ssh_config
