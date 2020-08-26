@@ -2,10 +2,10 @@ FROM library/ubuntu:bionic
 MAINTAINER Mark Lilback <mark@lilback.com>
 
 ARG hadoopversion=2.9.2
-ARG hiveversion=2.1.1
+ARG hiveversion=2.3.7
 ARG javaversion=8
 ARG javaversion_number=1.${javaversion}.0
-ARG pgversion=9.6
+ARG pgversion=12
 
 COPY postgresKey.asc openjdkKey.asc /tmp/
 RUN apt-get update && \
@@ -38,7 +38,7 @@ RUN cd /opt && \
 	ln -s /opt/hive/jdbc/hive-jdbc-${hiveversion}-standalone.jar /opt/hive/lib/ && \
 	rm apache-hive-${hiveversion}-bin.tar.gz
 
-ADD core-site.xml log4j.properties /opt/hadoop/etc/hadoop/
+ADD core-site.xml hive-exec-log4j2.properties hive-log4j2.properties /opt/hadoop/etc/hadoop/
 ADD startup.sh /
 ADD hive-env.sh /etc/profile.d/
 ADD hive-site.xml /opt/hive/conf/
