@@ -38,6 +38,7 @@ RUN cd /opt && \
 	ln -s /usr/share/java/postgresql-jdbc4.jar /opt/hive/lib/postgresql-jdbc4.jar && \
 	ln -s /opt/hive/jdbc/hive-jdbc-${hiveversion}-standalone.jar /opt/hive/lib/ && \
 	rm apache-hive-${hiveversion}-bin.tar.gz && \
+	chown -R root:root /opt/hive && \
 	mkdir /opt/hive-data && \
     mkdir /scripts && \
     chown -R root:root /opt/hive-data && \
@@ -51,12 +52,13 @@ ADD hive-site.xml /opt/hive/conf/
 RUN useradd -u 1000 -s /bin/bash -m -d /home/rstudio rstudio
 
 COPY waitfor.sh /scripts/
-RUN chmod 777 /scripts/waitfor.sh
+RUN chmod 777 /scripts/waitfor.sh /startup.sh
 
 RUN echo "export CLASSPATH=/opt/hive/jdbc/hive-jdbc-${hiveversion}-standalone.jar" >> /.bashrc && \
 	echo "export JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-amd64" >> /.bashrc && \
 	echo "export PATH=/opt/hive/bin:/opt/hadoop/bin:$PATH" >> /.bashrc && \
-    echo "JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-amd64" >> /etc/profile
+    echo "JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-amd64" >> /etc/profile && \
+    . /.bashrc
 
 
 CMD ["/startup.sh"]
