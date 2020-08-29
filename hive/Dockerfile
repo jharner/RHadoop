@@ -1,8 +1,8 @@
 FROM library/ubuntu:bionic
 MAINTAINER Mark Lilback <mark@lilback.com>
 
-ARG hadoopversion=2.9.2
-ARG hiveversion=2.3.7
+ARG hadoopversion=2.10.0
+ARG hiveversion=2.1.1
 ARG javaversion=8
 ARG javaversion_number=1.${javaversion}.0
 ARG pgversion=12
@@ -19,11 +19,6 @@ RUN apt-get update && \
     update-java-alternatives -s adoptopenjdk-8-hotspot-amd64 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-
-# RUN apt-get update && \
-#	  apt-get install -y apt-utils wget openjdk-${javaversion}-jdk libpostgresql-jdbc-java postgresql-client && \
-#	  update-java-alternatives -s /usr/lib/jvm/java-${javaversion_number}-openjdk-amd64 && \
-#	  apt-get clean
 
 RUN cd /opt && wget --quiet http://archive.apache.org/dist/hadoop/common/hadoop-${hadoopversion}/hadoop-${hadoopversion}.tar.gz && \
 	tar zxf hadoop-${hadoopversion}.tar.gz && \
@@ -44,7 +39,9 @@ RUN cd /opt && \
     chown -R root:root /opt/hive-data && \
     chmod 700 /opt/hive-data
 
-ADD core-site.xml hive-exec-log4j2.properties hive-log4j2.properties /opt/hadoop/etc/hadoop/
+ADD core-site.xml log4j.properties /opt/hadoop/etc/hadoop/
+#ADD core-site.xml hive-exec-log4j2.properties hive-log4j2.properties /opt/hadoop/etc/hadoop/
+
 ADD startup.sh /
 ADD hive-env.sh /etc/profile.d/
 ADD hive-site.xml /opt/hive/conf/
