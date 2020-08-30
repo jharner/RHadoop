@@ -4,7 +4,6 @@ MAINTAINER Mark Lilback <mark@lilback.com>
 ARG hadoopversion=2.10.0
 ARG hiveversion=2.1.1
 ARG javaversion=8
-ARG javaversion_number=1.${javaversion}.0
 ARG pgversion=12
 
 COPY postgresKey.asc openjdkKey.asc /tmp/
@@ -15,11 +14,11 @@ RUN apt-get update && \
     add-apt-repository --yes 'deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main' && \
 	add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ && \
 	apt-get update && \
-    apt-get install --no-install-recommends -y postgresql-client-${pgversion} openssh-client openssh-server libpostgresql-jdbc-java libicu-dev adoptopenjdk-8-hotspot && \
-    update-java-alternatives -s adoptopenjdk-8-hotspot-amd64 && \
+    apt-get install --no-install-recommends -y postgresql-client-${pgversion} openssh-client openssh-server libpostgresql-jdbc-java libicu-dev adoptopenjdk-${javaversion}-hotspot && \
+    update-java-alternatives -s adoptopenjdk-${javaversion}-hotspot-amd64 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-
+# Install HADOOP
 RUN cd /opt && wget --quiet http://archive.apache.org/dist/hadoop/common/hadoop-${hadoopversion}/hadoop-${hadoopversion}.tar.gz && \
 	tar zxf hadoop-${hadoopversion}.tar.gz && \
 	ln -s hadoop-${hadoopversion} hadoop && \
@@ -39,9 +38,8 @@ RUN cd /opt && \
     chown -R root:root /opt/hive-data && \
     chmod 700 /opt/hive-data
 
+# Set Configuration for Hive service.
 ADD core-site.xml log4j.properties /opt/hadoop/etc/hadoop/
-#ADD core-site.xml hive-exec-log4j2.properties hive-log4j2.properties /opt/hadoop/etc/hadoop/
-
 ADD startup.sh /
 ADD hive-env.sh /etc/profile.d/
 ADD hive-site.xml /opt/hive/conf/
@@ -52,9 +50,9 @@ COPY waitfor.sh /scripts/
 RUN chmod 777 /scripts/waitfor.sh /startup.sh
 
 RUN echo "export CLASSPATH=/opt/hive/jdbc/hive-jdbc-${hiveversion}-standalone.jar" >> /.bashrc && \
-	echo "export JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-amd64" >> /.bashrc && \
+	echo "export JAVA_HOME=/usr/lib/jvm/adoptopenjdk-${javaversion}-hotspot-amd64" >> /.bashrc && \
 	echo "export PATH=/opt/hive/bin:/opt/hadoop/bin:$PATH" >> /.bashrc && \
-    echo "JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-amd64" >> /etc/profile && \
+    echo "JAVA_HOME=/usr/lib/jvm/adoptopenjdk-${javaversion}-hotspot-amd64" >> /etc/profile && \
     . /.bashrc
 
 
